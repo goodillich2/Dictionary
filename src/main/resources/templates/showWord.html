@@ -1,0 +1,178 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en">
+<!--<html lang="en" xmlns:th="http://thymeleaf.org">-->
+<head>
+    <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">-->
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <style>
+        html, body{
+            padding: 0px;
+            margin: 0px;
+            background-color: wheat;
+            height: 100%;
+
+        }
+        .wrapper{
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        table {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+            font-size: 14px;
+            border-radius: 10px;
+            border-spacing: 0;
+            text-align: center;
+            margin-left: 80pt;
+            margin-right: 80pt;
+
+        }
+        th {
+            background: #BCEBDD;
+            color: black;
+            text-shadow: 0 1px 1px #2D2020;
+            padding: 10px 20px;
+        }
+        th, td {
+            border-style: solid;
+            border-width: 0 1px 1px 0;
+            border-color: white;
+            color: #252525;
+        }
+        th:first-child, td:first-child {
+            text-align: left;
+            color: #252525;
+        }
+        th:first-child {
+            border-top-left-radius: 10px;
+            color: #252525;
+        }
+        th:last-child {
+            border-top-right-radius: 10px;
+            border-right: none;
+            color: #252525;
+        }
+        td {
+            padding: 10px 20px;
+            color: #252525;
+            background: #F8E391;
+        }
+        tr:last-child td:first-child {
+            border-radius: 0 0 0 10px;
+            color: #252525;
+        }
+        tr:last-child td:last-child {
+            border-radius: 0 0 10px 0;
+        }
+        tr td:last-child {
+            border-right: none;
+        }
+
+        .pressed-button {
+            text-decoration: none;
+            display: inline-block;
+            padding: 6px 15px;
+            margin: 5px 5px;
+            border-radius: 30px;
+            background-image: linear-gradient(45deg, #6ab1d7 0%, #33d9de 50%, #002878 100%);
+            background-position: 100% 0;
+            background-size: 100% 100%;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 300;
+            color: white;
+            box-shadow: 0 16px 32px 0 rgba(0, 40, 120, .35);
+            transition: .5s;
+        }
+        .pressed-button:hover {
+            box-shadow: 0 0 0 0 rgba(0, 40, 120, 0);
+            background-position: 0 0;
+        }
+
+        .menu {
+            flex: 1 1 auto;
+        }
+        .frame{
+            float:left;
+            width: 100%;
+            height: 100%;
+            padding-left:280px;
+            padding-top: 100pt;
+        }
+        .pad{
+            padding: 10pt;
+        }
+        .demotable {
+            border-collapse: collapse;
+            counter-reset: schetchik;
+        }
+        .demotable tbody tr {
+            counter-increment: schetchik;
+        }
+        .demotable td,
+        .demotable tbody tr:before {
+            padding: .1em .5em;
+            border: 1px solid #E7D5C0;
+        }
+        .demotable b:after {
+            content: counter(schetchik);
+            color: #978777;
+        }
+        .demotable tbody tr:before {
+            content: counter(schetchik, upper-roman);
+            display: table-cell;
+            vertical-align: middle;
+            color: #978777;
+        }
+    </style>
+
+</head>
+<body>
+<heder>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Dictionary</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/">Home</a></li>
+                <li class="active"><a href="/dictionary/list">Dictionaries</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/auth/login"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                <li><a href="/auth/logout"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            </ul>
+        </div>
+    </nav>
+</heder>
+
+
+<div class="frame">
+    <table >
+        <thead >
+        <tr >
+            <th scope="col" style="font-size: 20pt">Оригінальне слово</th>
+            <th scope="col" style="font-size: 20pt">Переклад</th>
+            <th sec:authorize="hasAuthority('write')" scope="col" style="font-size: 20pt">Видалити</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr  th:each="word: ${wordList}">
+            <td  style="font-size: 20pt; color: black" th:text="${word.getOriginal()}"/>
+            <td  style="font-size: 20pt; color: black" th:text="${word.getTranslation()}"/>
+            <td sec:authorize="hasAuthority('write')">
+                <form th:action="@{/word/delete/{id}(id = ${word.id})}" method="post">
+                    <div class="lab">
+                        <input type="submit" value="Підтвердити" style=" height: 30pt; width: 100pt; border-radius: 10pt; background-color: cornflowerblue; color: white; margin-top: 5pt"/>
+                    </div>
+                </form></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
